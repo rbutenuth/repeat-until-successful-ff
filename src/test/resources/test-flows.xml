@@ -1,27 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
-	xmlns:untilsuccessfulfailfast="http://www.mulesoft.org/schema/mule/untilsuccessfulfailfast"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:java="http://www.mulesoft.org/schema/mule/java"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:untilsuccessfulfailfast="http://www.mulesoft.org/schema/mule/untilsuccessfulfailfast" xmlns="http://www.mulesoft.org/schema/mule/core" 
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/untilsuccessfulfailfast http://www.mulesoft.org/schema/mule/untilsuccessfulfailfast/current/mule-untilsuccessfulfailfast.xsd
-">
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd">
 	
-	<flow name="success-case" doc:id="702ab87e-c362-4ee9-a1f6-b69482ac5df5">
-		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="4fea0130-f844-4986-9f7f-3b734e1e61ff" numberOfRetries="2" initialDelay="1000" followUpDelay="#[lastDelay * 2]" failFastPattern="MY_NAMESPACE:MY_TYPE">
-			<set-payload value="huhu" doc:name="huhu" doc:id="35b744fd-7670-4c76-a55e-4103113ea214" />
+	<flow name="success-case" doc:id="c3db7944-a0d1-48a2-89a6-afedcb360484">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="369e3394-89da-4d2d-ada9-9454a2171b5e" numberOfRetries="2" initialDelay="1000" followUpDelay="#[lastDelay * 2]">
+			<set-payload value="huhu" doc:name="huhu" doc:id="860a1d71-cb96-4c09-90dc-1622b4cb190e" />
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
-	<flow name="dataweave-with-error" doc:id="9d8ee4aa-9e8c-477e-a9a2-23f91af169a1">
-		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="773e6888-c8ef-4e0d-989f-512e9005708c" numberOfRetries="2" initialDelay="1000" followUpDelay="#[lastDelay * 2]" failFastPattern="MULE:EXPRESSION">
-			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="271d861e-e0bd-4c9a-9c47-ab1620627538" />
+	<flow name="dataweave-with-error" doc:id="b4a36909-2108-470e-b74b-2691eb5eead9">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="027389d1-12ad-4ca8-8655-386ed1e98c52" numberOfRetries="2" initialDelay="1000" followUpDelay="#[lastDelay * 2]" failFastPattern="MULE:EXPRESSION">
+			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="9fae1c2e-df98-4c71-8a82-81f28f5f6443" />
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
-	<flow name="dataweave-with-error-several-tries" doc:id="eb337632-4cb3-49c6-8a79-b7c2f8392012">
-		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="cedf0352-5b80-47b5-9e21-1e5c989a172b" numberOfRetries="1" initialDelay="100">
-			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="5768e9b3-c0bf-4bd2-ab3d-3e7141b8d2dc" />
+	<flow name="dataweave-with-error-several-tries" doc:id="3831a022-3935-421f-b043-e1eeaccd41b6">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="c09aa213-d13b-4c46-9d66-0ca5f8b0f4ec" numberOfRetries="1" initialDelay="100" failFastPattern="DOES:NOT MATCH">
+			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="51525d1d-24f9-4b20-980f-3257d67278c2" />
+		</untilsuccessfulfailfast:repeat-until-successful-ff>
+	</flow>
+
+	<flow name="computed-second-delay" doc:id="3861ad04-b17c-4836-a2e1-784967fed118">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="262b25ba-94d5-4ab2-b9ef-08423d0bca97" numberOfRetries="2" initialDelay="100" followUpDelay="#[lastDelay * 2]" failFastPattern="DOES:NOT MATCH">
+			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="04f1ae15-6f19-4a3e-a951-a8cd48055cac" />
+		</untilsuccessfulfailfast:repeat-until-successful-ff>
+	</flow>
+
+	<flow name="default-second-delay" doc:id="6e899a8c-b439-4c28-823a-1081bc09d53a">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="c4e6bc2c-6071-4083-8e87-f2e10384f147" numberOfRetries="2" initialDelay="100" failFastPattern="DOES:NOT MATCH">
+			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="d93ac893-984e-43f5-a0ca-de8ced43778f" />
+		</untilsuccessfulfailfast:repeat-until-successful-ff>
+	</flow>
+
+	<flow name="success-on-second-try" doc:id="10cd3599-ccb2-4903-be47-433bea996db8">
+		<java:new doc:name="BooleanProvider(1)" doc:id="6f769d28-82b7-4b62-b611-0f97ccf4e66c" class="BooleanProvider" constructor="BooleanProvider(int)">
+			<java:args ><![CDATA[#[{
+	size: 1
+}]]]></java:args>
+		</java:new>
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="f6a117e0-742a-4ec9-9ec0-bfff3acb1f39" numberOfRetries="10" initialDelay="100">
+			<java:invoke doc:name="fetch()" doc:id="2a99886b-fa7d-45cb-b921-76471789377e" instance="#[payload]" class="BooleanProvider" method="fetch()">
+				<java:args ><![CDATA[#[{}]]]></java:args>
+			</java:invoke>
+			<choice doc:name="Choice" doc:id="19495fdb-225e-4d3c-876b-ed476c7ff5fa" >
+				<when expression="#[payload]">
+					<logger level="INFO" doc:name="raise next error" doc:id="c22b6579-a1f2-4ee2-9619-301d0a063601" message="raise next error" category="success-on-second-try" />
+					<raise-error doc:name="Raise error" doc:id="ef7b953b-60a6-4f11-bf04-d0a13ebf69a9" type="MY_NAMESPACE:MY_IDENTIFIER" description="nothing to describe..." />
+				</when>
+				<otherwise >
+					<logger level="INFO" doc:name="no more errors" doc:id="8756e13c-b42d-440b-9c05-705f6a16a8f7" message="no more errors" category="success-on-second-try"/>
+				</otherwise>
+			</choice>
+
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 

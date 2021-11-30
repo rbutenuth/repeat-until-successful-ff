@@ -39,6 +39,19 @@ public class RepeatOperations implements Stoppable, Startable {
 
 	private ScheduledExecutorService scheduledExecutor;
 
+	@Override
+	public void start() {
+		SchedulerConfig config = SchedulerConfig.config().withMaxConcurrentTasks(10)
+				.withShutdownTimeout(1, TimeUnit.SECONDS).withPrefix("repeat-until-successful-ff")
+				.withName("operations");
+		scheduledExecutor = schedulerService.customScheduler(config);
+	}
+
+	@Override
+	public void stop() {
+		scheduledExecutor.shutdown();
+	}
+
 	@Alias("repeat-until-successful-ff")
 	public void repeat(Chain operations, CompletionCallback<Object, Object> callback, //
 			@Summary("How often shall the operation be retried when the first try failed?") int numberOfRetries,
@@ -72,19 +85,6 @@ public class RepeatOperations implements Stoppable, Startable {
 		}
 	}
 
-	@Override
-	public void start() {
-		SchedulerConfig config = SchedulerConfig.config().withMaxConcurrentTasks(10)
-				.withShutdownTimeout(1, TimeUnit.SECONDS).withPrefix("repeat-until-successful-ff")
-				.withName("operations");
-		scheduledExecutor = schedulerService.customScheduler(config);
-	}
-
-	@Override
-	public void stop() {
-		scheduledExecutor.shutdown();
-	}
-
 	private class RepeatRunner implements Runnable {
 		private Chain operations;
 		private CompletionCallback<Object, Object> callback;
@@ -113,7 +113,7 @@ public class RepeatOperations implements Stoppable, Startable {
 		public void run() {
 
 			operations.process(result -> {
-				logger.info("success, payload = {}", result.getOutput());
+				logger.debug("success, payload = {}", result.getOutput());
 				callback.success(result);
 			}, (error, previous) -> {
 				if (error instanceof MuleException) {
@@ -127,7 +127,7 @@ public class RepeatOperations implements Stoppable, Startable {
 					} else {
 						// Compute delay and let's try again...
 						retryIndex++;
-						logger.info("Scheduling try {}", retryIndex);
+						logger.debug("Scheduling try {}", retryIndex + 1);
 						if (retryIndex > 1) {
 							if (followUpDelay.isPresent()) {
 								BindingContext context = BindingContext.builder()
@@ -137,6 +137,7 @@ public class RepeatOperations implements Stoppable, Startable {
 								TypedValue<Number> expressionResult = (TypedValue<Number>) expressionManager
 										.evaluateLogExpression(followUpDelay.get(), context);
 								lastDelay = expressionResult.getValue().intValue();
+								logger.debug("computed delay: {}", lastDelay);
 							}
 						}
 						scheduledExecutor.schedule(this, lastDelay, TimeUnit.MILLISECONDS);
@@ -149,6 +150,7 @@ public class RepeatOperations implements Stoppable, Startable {
 	}
 
 	static String extractErrorType(Map<String, Object> info) {
+		// In JUnit tests it looks like it is always a String, but in real life it's an ErrorType...
 		Object errorType = info.get(MuleException.INFO_ERROR_TYPE_KEY);
 		if (errorType instanceof String) {
 			return (String) errorType;

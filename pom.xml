@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.codecentric.mule.modules</groupId>
 	<artifactId>repeat-until-successful-ff</artifactId>
-	<version>0.0.29-SNAPSHOT</version>
+	<version>0.0.30-SNAPSHOT</version>
 	<packaging>mule-extension</packaging>
 	<name>Loop-module Extension</name>
 
@@ -162,6 +162,12 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.module</groupId>
+			<artifactId>mule-java-module</artifactId>
+			<version>1.2.9</version>
+			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
 
