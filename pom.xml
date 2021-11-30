@@ -8,7 +8,7 @@
 	<artifactId>repeat-until-successful-ff</artifactId>
 	<version>0.0.30-SNAPSHOT</version>
 	<packaging>mule-extension</packaging>
-	<name>Loop-module Extension</name>
+	<name>Repeat-until-successfull-ff-module Extension</name>
 
 	<parent>
 		<groupId>org.mule.extensions</groupId>
@@ -43,13 +43,23 @@
 		</license>
 	</licenses>
 
-	<!-- <scm> <connection>scm:git:https://github.com/rbutenuth/loop-module.git</connection> 
-		<developerConnection>scm:git:https://github.com/rbutenuth/loop-module.git</developerConnection> 
-		<url>https://github.com/rbutenuth/loop-module</url> <tag>loop-module-0.1.0</tag> 
-		</scm> <distributionManagement> <snapshotRepository> <id>ossrh-snapshot</id> 
-		<name>Nexus Snapshot Repository</name> <url>https://oss.sonatype.org/content/repositories/snapshots</url> 
-		</snapshotRepository> <repository> <id>ossrh</id> <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url> 
-		</repository> </distributionManagement> -->
+	<scm>
+		<connection>scm:git:https://github.com/rbutenuth/repeat-until-successful-ff.git</connection>
+		<developerConnection>scm:git:https://github.com/rbutenuth/repeat-until-successful-ff.git</developerConnection>
+		<url>https://github.com/rbutenuth/repeat-until-successful-ff</url>
+		<tag>repeat-until-successful-0.1.0</tag>
+	</scm>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh-snapshot</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<profiles>
 		<profile>
