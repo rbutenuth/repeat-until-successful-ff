@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.codecentric.mule.modules</groupId>
-	<artifactId>loop-module</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<artifactId>repeat-until-successful-ff</artifactId>
+	<version>0.0.29-SNAPSHOT</version>
 	<packaging>mule-extension</packaging>
 	<name>Loop-module Extension</name>
 
@@ -22,7 +24,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<build.plugin.cobertura.version>2.7</build.plugin.cobertura.version>
 		<project.scm.id>GitHub</project.scm.id>
-		<dependency.locations.enabled>false</dependency.locations.enabled>	
+		<dependency.locations.enabled>false</dependency.locations.enabled>
 	</properties>
 
 	<developers>
@@ -41,24 +43,13 @@
 		</license>
 	</licenses>
 
-	<scm>
-		<connection>scm:git:https://github.com/rbutenuth/loop-module.git</connection>
-		<developerConnection>scm:git:https://github.com/rbutenuth/loop-module.git</developerConnection>
-		<url>https://github.com/rbutenuth/loop-module</url>
-		<tag>loop-module-0.1.0</tag>
-	</scm>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh-snapshot</id>
-			<name>Nexus Snapshot Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
+	<!-- <scm> <connection>scm:git:https://github.com/rbutenuth/loop-module.git</connection> 
+		<developerConnection>scm:git:https://github.com/rbutenuth/loop-module.git</developerConnection> 
+		<url>https://github.com/rbutenuth/loop-module</url> <tag>loop-module-0.1.0</tag> 
+		</scm> <distributionManagement> <snapshotRepository> <id>ossrh-snapshot</id> 
+		<name>Nexus Snapshot Repository</name> <url>https://oss.sonatype.org/content/repositories/snapshots</url> 
+		</snapshotRepository> <repository> <id>ossrh</id> <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url> 
+		</repository> </distributionManagement> -->
 
 	<profiles>
 		<profile>
@@ -70,7 +61,7 @@
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<version>2.10.4</version>
 						<configuration>
-							<excludePackageNames>de.codecentric.mule.assertobjectequals.generated.*</excludePackageNames>
+							<!-- <excludePackageNames>de.codecentric.mule.assertobjectequals.generated.*</excludePackageNames> -->
 						</configuration>
 						<executions>
 							<execution>
@@ -167,6 +158,11 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.6</version>
+		</dependency>
 	</dependencies>
 
 </project>

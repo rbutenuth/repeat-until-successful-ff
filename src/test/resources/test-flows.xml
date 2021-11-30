@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:untilsuccessfulfailfast="http://www.mulesoft.org/schema/mule/untilsuccessfulfailfast"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/untilsuccessfulfailfast http://www.mulesoft.org/schema/mule/untilsuccessfulfailfast/current/mule-untilsuccessfulfailfast.xsd
+">
+	
+	<flow name="success-case" doc:id="702ab87e-c362-4ee9-a1f6-b69482ac5df5">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="4fea0130-f844-4986-9f7f-3b734e1e61ff" numberOfRetries="2" initialDelay="1000" followUpDelay="#[lastDelay * 2]" failFastPattern="MY_NAMESPACE:MY_TYPE">
+			<set-payload value="huhu" doc:name="huhu" doc:id="35b744fd-7670-4c76-a55e-4103113ea214" />
+		</untilsuccessfulfailfast:repeat-until-successful-ff>
+	</flow>
+
+	<flow name="dataweave-with-error" doc:id="9d8ee4aa-9e8c-477e-a9a2-23f91af169a1">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="773e6888-c8ef-4e0d-989f-512e9005708c" numberOfRetries="2" initialDelay="1000" followUpDelay="#[lastDelay * 2]" failFastPattern="MULE:EXPRESSION">
+			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="271d861e-e0bd-4c9a-9c47-ab1620627538" />
+		</untilsuccessfulfailfast:repeat-until-successful-ff>
+	</flow>
+
+	<flow name="dataweave-with-error-several-tries" doc:id="eb337632-4cb3-49c6-8a79-b7c2f8392012">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="cedf0352-5b80-47b5-9e21-1e5c989a172b" numberOfRetries="1" initialDelay="100">
+			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="5768e9b3-c0bf-4bd2-ab3d-3e7141b8d2dc" />
+		</untilsuccessfulfailfast:repeat-until-successful-ff>
+	</flow>
+
+</mule>
