@@ -16,7 +16,7 @@ When expression is empty, initialDelay will be used for all delays.
 The following predefined variables can be used in the DataWeave:
   * initialDelay: Delay between initial call and first retry
   * lastDelay: Last delay in millisedonds
-  * retryIndex: Which retry is this
+  * retryIndex: Which retry is this (count starts at 0)
 * failFastPattern (optional):  
   
 
@@ -32,4 +32,17 @@ Start with 1000ms initial delay, do two retries in case initial call failed, inc
 	failFastPattern="MY_NAMESPACE:MY_TYPE">
 ...
 </untilsuccessfulfailfast:repeat-until-successful-ff>
+```
+
+## Maven Configuration
+
+Add the following dependency to your pom.xml:
+
+```
+<dependency>
+	<groupId>de.codecentric.mule.modules</groupId>
+	<artifactId>repeat-until-successful-ff</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<classifier>mule-plugin</classifier>
+</dependency>
 ```

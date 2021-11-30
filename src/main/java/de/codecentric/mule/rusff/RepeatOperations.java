@@ -28,6 +28,10 @@ import org.mule.runtime.extension.api.runtime.route.Chain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Module implementation for repeat until successful with DataWeave computed delay between tries
+ * and possibility for fast fail, configured with a regular expression on the error type.
+ */
 public class RepeatOperations implements Stoppable, Startable {
 	private static Logger logger = LoggerFactory.getLogger(RepeatOperations.class);
 
@@ -59,7 +63,8 @@ public class RepeatOperations implements Stoppable, Startable {
 			@Summary("A DataWeave expression to compute the wait time, starting with the second retry. "
 					+ "The following predefined variables exist: "
 					+ "initialDelay: Delay between initial call and first retry, "
-					+ "lastDelay: Last delay in millisedonds, " + "retryIndex: Which retry is this. "
+					+ "lastDelay: Last delay in millisedonds, " 
+					+ "retryIndex: Which try is this (counted from 0). "
 					+ "When expression is empty, initialDelay will be used for all delays.") @Optional @Expression(ExpressionSupport.REQUIRED) Literal<String> followUpDelay,
 			@Summary("Regular expression for errors (NAMESPACE:TYPE), in case of match, no retry will be done.") @Optional @Expression(ExpressionSupport.NOT_SUPPORTED) String failFastPattern) {
 
@@ -85,6 +90,9 @@ public class RepeatOperations implements Stoppable, Startable {
 		}
 	}
 
+	/**
+	 * Schedulable execution of initial try and followup tries.
+	 */
 	private class RepeatRunner implements Runnable {
 		private Chain operations;
 		private CompletionCallback<Object, Object> callback;
@@ -95,8 +103,8 @@ public class RepeatOperations implements Stoppable, Startable {
 		private int lastDelay;
 		private int retryIndex;
 
-		private RepeatRunner(Chain operations, CompletionCallback<Object, Object> callback, //
-				int numberOfRetries, int initialDelay, java.util.Optional<String> followUpDelay,
+		private RepeatRunner(Chain operations, CompletionCallback<Object, Object> callback, int numberOfRetries,
+				int initialDelay, java.util.Optional<String> followUpDelay,
 				java.util.Optional<Pattern> failFastPattern) {
 
 			this.operations = operations;
@@ -116,18 +124,21 @@ public class RepeatOperations implements Stoppable, Startable {
 				logger.debug("success, payload = {}", result.getOutput());
 				callback.success(result);
 			}, (error, previous) -> {
+				// It's probably *always* a MuleException. In case not,
+				// fail gracefully in the else part.
 				if (error instanceof MuleException) {
 					MuleException exception = (MuleException) error;
 					Map<String, Object> info = exception.getInfo();
 					String namespaceAndIdentifier = extractErrorType(info);
+					logger.info("try {} of {} failed with error {}", retryIndex + 1, numberOfRetries + 1, namespaceAndIdentifier);
 					if (failFastPattern.isPresent() && failFastPattern.get().matcher(namespaceAndIdentifier).matches()
 							|| retryIndex >= numberOfRetries) {
 						// fail fast or number of retries reached
+						logger.warn("tries exhausted, throwing error {}", namespaceAndIdentifier);
 						callback.error(error);
 					} else {
 						// Compute delay and let's try again...
 						retryIndex++;
-						logger.debug("Scheduling try {}", retryIndex + 1);
 						if (retryIndex > 1) {
 							if (followUpDelay.isPresent()) {
 								BindingContext context = BindingContext.builder()
@@ -149,8 +160,13 @@ public class RepeatOperations implements Stoppable, Startable {
 		}
 	}
 
+	/**
+	 * In JUnit tests the error type from the info map is always a String, but in "real life" it's an {@link ErrorType}.
+	 * We handle the difference here and have to live with one code line not covered in a JUnit test. :-(
+	 * @param info Map from {@link MuleException}.
+	 * @return Error type as String: NAMESPACE:IDENTIFIER
+	 */
 	static String extractErrorType(Map<String, Object> info) {
-		// In JUnit tests it looks like it is always a String, but in real life it's an ErrorType...
 		Object errorType = info.get(MuleException.INFO_ERROR_TYPE_KEY);
 		if (errorType instanceof String) {
 			return (String) errorType;
