@@ -42,7 +42,7 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:rbutenuth@github.com:rbutenuth/repeat-until-successful-ff.git</connection>
+		<connection>scm:git:git@github.com:rbutenuth/repeat-until-successful-ff.git</connection>
 		<tag>repeat-until-successful-ff-1.0.0</tag>
 	</scm>
 	
