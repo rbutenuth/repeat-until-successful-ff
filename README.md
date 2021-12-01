@@ -6,7 +6,7 @@ The Repeat until successful module is similar to [Until Successful from MuleSoft
 
 There are two additional features:
 * The delay time between successive repeats can be computed by a DataWeave expression, e.g. to implemenent exponential backoff.
-* You can fail fast for some errors. Which ones is determined by a regular expression which tries to match namespace:identifier of the error.
+* You can fail fast for some errors. Which ones is determined by a regular expression which tries to match NAMESPACE:IDENTIFIER of the error.
 
 Configuration parameters:
 * numberOfRetries (mandatory): How often shall the operation be retried when the first try failed?
@@ -17,8 +17,9 @@ The following predefined variables can be used in the DataWeave:
   * initialDelay: Delay between initial call and first retry
   * lastDelay: Last delay in millisedonds
   * retryIndex: Which retry is this (count starts at 0)
-* failFastPattern (optional):  
-  
+* failFastPattern (optional): A regular expression. In case it matches the NAMESPACE:IDENTIFIER of the error, no further tries will be executed.
+
+When the number of tries is exhausted or the failFastPattern has matched, the last of the occuring exceptions is propagated out of the scope.
 
 ## Example
 
