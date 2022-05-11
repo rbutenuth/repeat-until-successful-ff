@@ -74,10 +74,11 @@ public class RepeatOperations implements Stoppable, Startable {
 					+ "lastDelay: Last delay in millisedonds, " 
 					+ "retryIndex: Which try is this (counted from 0). "
 					+ "When expression is empty, initialDelay will be used for all delays.") @Optional @Expression(ExpressionSupport.REQUIRED) Literal<String> followUpDelay,
-			@Summary("Regular expression for errors (NAMESPACE:TYPE), in case of match, no retry will be done.") @Optional @Expression(ExpressionSupport.NOT_SUPPORTED) String failFastPattern) {
+			@Summary("Regular expression for errors (NAMESPACE:TYPE), in case of match, no retry will be done.") @Optional @Expression(ExpressionSupport.NOT_SUPPORTED) String failFastPattern,
+			@Optional(defaultValue = "FAIL_ON_MATCH") FailMode mode) {
 
 		RepeatRunner repeatRunner = new RepeatRunner(operations, callback, numberOfRetries, initialDelay,
-				createFollowUpLiteral(followUpDelay), createOptionalPattern(failFastPattern));
+				createFollowUpLiteral(followUpDelay), createOptionalPattern(failFastPattern), mode);
 		repeatRunner.run();
 
 	}
@@ -108,12 +109,13 @@ public class RepeatOperations implements Stoppable, Startable {
 		private int initialDelay;
 		private java.util.Optional<String> followUpDelay;
 		private java.util.Optional<Pattern> failFastPattern;
+		private FailMode mode;
 		private int lastDelay;
 		private int retryIndex;
 
 		private RepeatRunner(Chain operations, CompletionCallback<Object, Object> callback, int numberOfRetries,
 				int initialDelay, java.util.Optional<String> followUpDelay,
-				java.util.Optional<Pattern> failFastPattern) {
+				java.util.Optional<Pattern> failFastPattern, FailMode mode) {
 
 			this.operations = operations;
 			this.callback = callback;
@@ -122,6 +124,7 @@ public class RepeatOperations implements Stoppable, Startable {
 			lastDelay = initialDelay;
 			this.followUpDelay = followUpDelay;
 			this.failFastPattern = failFastPattern;
+			this.mode = mode;
 		}
 
 		@Override
@@ -139,7 +142,8 @@ public class RepeatOperations implements Stoppable, Startable {
 					Map<String, Object> info = exception.getInfo();
 					String namespaceAndIdentifier = extractErrorType(info);
 					logger.info("try {} of {} failed with error {}", retryIndex + 1, numberOfRetries + 1, namespaceAndIdentifier);
-					if (failFastPattern.isPresent() && failFastPattern.get().matcher(namespaceAndIdentifier).matches()
+					if (failFastPattern.isPresent() && 
+							(failFastPattern.get().matcher(namespaceAndIdentifier).matches() == (mode == FailMode.FAIL_ON_MATCH))
 							|| retryIndex >= numberOfRetries) {
 						// fail fast or number of retries reached
 						logger.warn("tries exhausted, throwing error {}", namespaceAndIdentifier);

@@ -17,7 +17,9 @@ The following predefined variables can be used in the DataWeave:
   * initialDelay: Delay between initial call and first retry
   * lastDelay: Last delay in millisedonds
   * retryIndex: Which retry is this (count starts at 0)
-* failFastPattern (optional):  
+* failFastPattern (optional): When error matches the given regex (and mode is FAIL_ON_MATCH), not retries will be done.
+  When mode is FAIL_ON_NOT_MATCH, the matcher reverses its definition.
+* mode FAIL_ON_MATCH: Fail fast on match of failFastPattern (default), FAIL_ON_NOT_MATCH: Fail fast on not match of failFastPattern.
   
 
 ## Example
@@ -42,7 +44,7 @@ Add the following dependency to your pom.xml:
 <dependency>
 	<groupId>de.codecentric.mule.modules</groupId>
 	<artifactId>repeat-until-successful-ff</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<classifier>mule-plugin</classifier>
 </dependency>
 ```

@@ -2,6 +2,7 @@ package de.codecentric.mule.rusff.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -32,6 +33,20 @@ public class RepeatModuleTests extends MuleArtifactFunctionalTestCase {
 		} catch (MuleException e) {
 			assertEquals("MULE:EXPRESSION", e.getInfo().get(MuleException.INFO_ERROR_TYPE_KEY).toString());
 		}
+	}
+	
+	@Test
+	public void dataWeaveWithErrorDoesNotMatch() throws Exception {
+		long start = System.currentTimeMillis();
+		try {
+			flowRunner("dataweave-with-error-does-not-match").run();
+			fail("Exception missing");
+		} catch (MuleException e) {
+			assertEquals("MULE:EXPRESSION", e.getInfo().get(MuleException.INFO_ERROR_TYPE_KEY).toString());
+		}
+		long end = System.currentTimeMillis();
+		// Should do no retries
+		assertTrue(end - start < 100);
 	}
 	
 	@Test
