@@ -1,3 +1,4 @@
+package de.codecentric.mule.rusff;
 
 /**
  * Return size times <code>true</code>, then <code>false</code>.

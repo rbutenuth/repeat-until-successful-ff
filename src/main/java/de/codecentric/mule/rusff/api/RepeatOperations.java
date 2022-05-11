@@ -1,4 +1,4 @@
-package de.codecentric.mule.rusff;
+package de.codecentric.mule.rusff.api;
 
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
@@ -10,23 +10,30 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.runtime.api.el.BindingContext;
 import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.api.i18n.I18nMessageFactory;
 import org.mule.runtime.api.lifecycle.Startable;
 import org.mule.runtime.api.lifecycle.Stoppable;
 import org.mule.runtime.api.message.ErrorType;
 import org.mule.runtime.api.meta.ExpressionSupport;
+import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.api.metadata.TypedValue;
 import org.mule.runtime.api.scheduler.SchedulerConfig;
 import org.mule.runtime.api.scheduler.SchedulerService;
 import org.mule.runtime.core.api.el.ExpressionManager;
 import org.mule.runtime.extension.api.annotation.Alias;
 import org.mule.runtime.extension.api.annotation.Expression;
+import org.mule.runtime.extension.api.annotation.error.Throws;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
+import org.mule.runtime.extension.api.exception.ModuleException;
 import org.mule.runtime.extension.api.runtime.parameter.Literal;
 import org.mule.runtime.extension.api.runtime.process.CompletionCallback;
 import org.mule.runtime.extension.api.runtime.route.Chain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.codecentric.mule.rusff.internal.NumberErrorType;
+
 
 /**
  * Module implementation for repeat until successful with DataWeave computed delay between tries
@@ -57,6 +64,7 @@ public class RepeatOperations implements Stoppable, Startable {
 	}
 
 	@Alias("repeat-until-successful-ff")
+	@Throws(NumberErrorType.class)
 	public void repeat(Chain operations, CompletionCallback<Object, Object> callback, //
 			@Summary("How often shall the operation be retried when the first try failed?") int numberOfRetries,
 			@Summary("Time between initial call and first retry, in milliseconds") int initialDelay,
@@ -145,9 +153,21 @@ public class RepeatOperations implements Stoppable, Startable {
 										.addBinding("initialDelay", TypedValue.of(initialDelay))
 										.addBinding("lastDelay", TypedValue.of(lastDelay))
 										.addBinding("retryIndex", TypedValue.of(retryIndex)).build();
-								TypedValue<Number> expressionResult = (TypedValue<Number>) expressionManager
+								TypedValue<?> expressionResult = (TypedValue<?>) expressionManager
 										.evaluateLogExpression(followUpDelay.get(), context);
-								lastDelay = expressionResult.getValue().intValue();
+								DataType dataType = expressionResult.getDataType();
+								if (Number.class.isAssignableFrom(dataType.getType())) {
+									lastDelay = ((TypedValue<Number>)expressionResult).getValue().intValue();
+								} else if (String.class.isAssignableFrom(dataType.getType())) {
+									String lastDelayStr = ((TypedValue<String>)expressionResult).getValue();
+									try {
+										lastDelay = Integer.valueOf(lastDelayStr);
+									} catch (NumberFormatException e) {
+										throw new ModuleException(I18nMessageFactory.createStaticMessage("Delay must be number"), RepeatErrorType.INVALID_NUMBER);
+									}
+								} else {
+									throw new ModuleException(I18nMessageFactory.createStaticMessage("Delay must be number"), RepeatErrorType.INVALID_NUMBER);
+								}
 								logger.debug("computed delay: {}", lastDelay);
 							}
 						}

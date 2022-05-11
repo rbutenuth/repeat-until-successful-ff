@@ -42,7 +42,7 @@ Add the following dependency to your pom.xml:
 <dependency>
 	<groupId>de.codecentric.mule.modules</groupId>
 	<artifactId>repeat-until-successful-ff</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<classifier>mule-plugin</classifier>
 </dependency>
 ```

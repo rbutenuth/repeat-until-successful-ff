@@ -1,4 +1,4 @@
-package de.codecentric.mule.rusff;
+package de.codecentric.mule.rusff.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
 import org.mule.runtime.api.event.Event;
 import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.extension.api.exception.ModuleException;
 
 public class RepeatModuleTests extends MuleArtifactFunctionalTestCase {
 
@@ -66,7 +67,49 @@ public class RepeatModuleTests extends MuleArtifactFunctionalTestCase {
 		}
 		long end = System.currentTimeMillis();
 		// we can't expect to exactly 100ms + 2 * 100ms for the two retries
-		assertEquals(300, end - start, 60);
+		assertEquals(300, end - start, 70);
+	}
+	
+	@Test
+	public void computedSecondDelayWithStringToNumberConversion() throws Exception {
+		// one run to warm up
+		try {
+			flowRunner("computed-second-delay-string").run();
+			fail("Exception missing");
+		} catch (MuleException e) {
+			assertEquals("MULE:EXPRESSION", e.getInfo().get(MuleException.INFO_ERROR_TYPE_KEY).toString());
+		}
+		// second with time measurement
+		long start = System.currentTimeMillis();
+		try {
+			flowRunner("computed-second-delay-string").run();
+			fail("Exception missing");
+		} catch (MuleException e) {
+			assertEquals("MULE:EXPRESSION", e.getInfo().get(MuleException.INFO_ERROR_TYPE_KEY).toString());
+		}
+		long end = System.currentTimeMillis();
+		// we can't expect to exactly 100ms + 100ms for the two retries
+		assertEquals(200, end - start, 70);
+	}
+	
+	@Test
+	public void computedSecondStringIsNotNumberButText() throws Exception {
+		try {
+			flowRunner("computed-second-delay-string-is-not-number-but-text").run();
+			fail("Exception missing");
+		} catch (ModuleException e) {
+			assertEquals("Delay must be number", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void computedSecondStringIsNotNumber() throws Exception {
+		try {
+			flowRunner("computed-second-delay-string-is-not-number-but-array").run();
+			fail("Exception missing");
+		} catch (ModuleException e) {
+			assertEquals("Delay must be number", e.getMessage());
+		}
 	}
 	
 	@Test

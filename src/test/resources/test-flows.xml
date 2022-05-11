@@ -32,6 +32,24 @@ http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/jav
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
+	<flow name="computed-second-delay-string" doc:id="da5786ab-98e2-4313-b557-3e2e0d4f16c4">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="c608d5fd-17a6-49d7-b85f-d47baea90072" numberOfRetries="2" initialDelay="100" followUpDelay='#["100"]' failFastPattern="DOES:NOT MATCH">
+			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="7f630e7a-b26f-47d7-9630-7bd0768d1f2e" />
+		</untilsuccessfulfailfast:repeat-until-successful-ff>
+	</flow>
+
+	<flow name="computed-second-delay-string-is-not-number-but-text" doc:id="f8b9cd59-f9d6-4ae8-8b11-40acd3ceb1e7">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="e3e024af-d69b-494f-85de-734d027d0fd5" numberOfRetries="2" initialDelay="100" followUpDelay='#["10XX0"]' failFastPattern="DOES:NOT MATCH">
+			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="5de66e85-9189-43ca-9147-2d34ae37566a" />
+		</untilsuccessfulfailfast:repeat-until-successful-ff>
+	</flow>
+
+	<flow name="computed-second-delay-string-is-not-number-but-array" doc:id="68f22104-b71b-4dda-9e99-13eee0e8e830">
+		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="f927e34c-257e-444f-8184-01969cef8f1a" numberOfRetries="2" initialDelay="100" followUpDelay='#[[42]]' failFastPattern="DOES:NOT MATCH">
+			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="4340feb0-6633-44aa-9bf9-eb2452c45ed4" />
+		</untilsuccessfulfailfast:repeat-until-successful-ff>
+	</flow>
+
 	<flow name="default-second-delay" doc:id="6e899a8c-b439-4c28-823a-1081bc09d53a">
 		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="c4e6bc2c-6071-4083-8e87-f2e10384f147" numberOfRetries="2" initialDelay="100" failFastPattern="DOES:NOT MATCH">
 			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="d93ac893-984e-43f5-a0ca-de8ced43778f" />
@@ -39,13 +57,13 @@ http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/jav
 	</flow>
 
 	<flow name="success-on-second-try" doc:id="10cd3599-ccb2-4903-be47-433bea996db8">
-		<java:new doc:name="BooleanProvider(1)" doc:id="6f769d28-82b7-4b62-b611-0f97ccf4e66c" class="BooleanProvider" constructor="BooleanProvider(int)">
+		<java:new doc:name="BooleanProvider(1)" doc:id="6f769d28-82b7-4b62-b611-0f97ccf4e66c" class="de.codecentric.mule.rusff.BooleanProvider" constructor="BooleanProvider(int)">
 			<java:args ><![CDATA[#[{
 	size: 1
 }]]]></java:args>
 		</java:new>
 		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="f6a117e0-742a-4ec9-9ec0-bfff3acb1f39" numberOfRetries="10" initialDelay="100">
-			<java:invoke doc:name="fetch()" doc:id="2a99886b-fa7d-45cb-b921-76471789377e" instance="#[payload]" class="BooleanProvider" method="fetch()">
+			<java:invoke doc:name="fetch()" doc:id="2a99886b-fa7d-45cb-b921-76471789377e" instance="#[payload]" class="de.codecentric.mule.rusff.BooleanProvider" method="fetch()">
 				<java:args ><![CDATA[#[{}]]]></java:args>
 			</java:invoke>
 			<choice doc:name="Choice" doc:id="19495fdb-225e-4d3c-876b-ed476c7ff5fa" >
