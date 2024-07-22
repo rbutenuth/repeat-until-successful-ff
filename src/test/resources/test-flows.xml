@@ -16,49 +16,49 @@ http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/jav
 
 	<flow name="dataweave-with-error" doc:id="b4a36909-2108-470e-b74b-2691eb5eead9">
 		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="027389d1-12ad-4ca8-8655-386ed1e98c52" numberOfRetries="2" initialDelay="1000" followUpDelay="#[lastDelay * 2]" failFastPattern="MULE:EXPRESSION">
-			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="9fae1c2e-df98-4c71-8a82-81f28f5f6443" />
+			<set-payload value="#[%dw 2.0 import * from dw::Runtime --- 0 fail('this is not valid')]" doc:name="bad dataweave" doc:id="9fae1c2e-df98-4c71-8a82-81f28f5f6443" />
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
 	<flow name="dataweave-with-error-does-not-match" doc:id="deb68c51-b135-4a7f-8365-76951db9f1d8">
 		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="7b745cfa-7443-453b-88f7-fb1ac4b9a4a4" numberOfRetries="2" initialDelay="1000" followUpDelay="#[lastDelay * 2]" failFastPattern="DOES:NOT MATCH" mode="FAIL_ON_NOT_MATCH">
-			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="8ad19073-d105-4af3-869e-d8a66a3d6e9f" />
+			<set-payload value="#[%dw 2.0 import * from dw::Runtime --- 0 fail('this is not valid')]" doc:name="bad dataweave" doc:id="8ad19073-d105-4af3-869e-d8a66a3d6e9f" />
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
 	<flow name="dataweave-with-error-several-tries" doc:id="3831a022-3935-421f-b043-e1eeaccd41b6">
 		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="c09aa213-d13b-4c46-9d66-0ca5f8b0f4ec" numberOfRetries="1" initialDelay="100" failFastPattern="DOES:NOT MATCH">
-			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="51525d1d-24f9-4b20-980f-3257d67278c2" />
+			<set-payload value="#[%dw 2.0 import * from dw::Runtime --- 0 fail('this is not valid')]" doc:name="bad dataweave" doc:id="51525d1d-24f9-4b20-980f-3257d67278c2" />
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
 	<flow name="computed-second-delay" doc:id="3861ad04-b17c-4836-a2e1-784967fed118">
 		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="262b25ba-94d5-4ab2-b9ef-08423d0bca97" numberOfRetries="2" initialDelay="100" followUpDelay="#[lastDelay * 2]" failFastPattern="DOES:NOT MATCH">
-			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="04f1ae15-6f19-4a3e-a951-a8cd48055cac" />
+			<set-payload value="#[%dw 2.0 import * from dw::Runtime --- 0 fail('this is not valid')]" doc:name="bad dataweave" doc:id="04f1ae15-6f19-4a3e-a951-a8cd48055cac" />
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
 	<flow name="computed-second-delay-string" doc:id="da5786ab-98e2-4313-b557-3e2e0d4f16c4">
 		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="c608d5fd-17a6-49d7-b85f-d47baea90072" numberOfRetries="2" initialDelay="100" followUpDelay='#["100"]' failFastPattern="DOES:NOT MATCH">
-			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="7f630e7a-b26f-47d7-9630-7bd0768d1f2e" />
+			<set-payload value="#[%dw 2.0 import * from dw::Runtime --- 0 fail('this is not valid')]" doc:name="bad dataweave" doc:id="7f630e7a-b26f-47d7-9630-7bd0768d1f2e" />
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
 	<flow name="computed-second-delay-string-is-not-number-but-text" doc:id="f8b9cd59-f9d6-4ae8-8b11-40acd3ceb1e7">
 		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="e3e024af-d69b-494f-85de-734d027d0fd5" numberOfRetries="2" initialDelay="100" followUpDelay='#["10XX0"]' failFastPattern="DOES:NOT MATCH">
-			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="5de66e85-9189-43ca-9147-2d34ae37566a" />
+			<set-payload value="#[%dw 2.0 import * from dw::Runtime --- 0 fail('this is not valid')]" doc:name="bad dataweave" doc:id="5de66e85-9189-43ca-9147-2d34ae37566a" />
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
 	<flow name="computed-second-delay-string-is-not-number-but-array" doc:id="68f22104-b71b-4dda-9e99-13eee0e8e830">
 		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="f927e34c-257e-444f-8184-01969cef8f1a" numberOfRetries="2" initialDelay="100" followUpDelay='#[[42]]' failFastPattern="DOES:NOT MATCH">
-			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="4340feb0-6633-44aa-9bf9-eb2452c45ed4" />
+			<set-payload value="#[%dw 2.0 import * from dw::Runtime --- 0 fail('this is not valid')]" doc:name="bad dataweave" doc:id="4340feb0-6633-44aa-9bf9-eb2452c45ed4" />
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
 	<flow name="default-second-delay" doc:id="6e899a8c-b439-4c28-823a-1081bc09d53a">
 		<untilsuccessfulfailfast:repeat-until-successful-ff doc:name="Repeat until successful ff" doc:id="c4e6bc2c-6071-4083-8e87-f2e10384f147" numberOfRetries="2" initialDelay="100" failFastPattern="DOES:NOT MATCH">
-			<set-payload value="#[this is not valid]" doc:name="bad dataweave" doc:id="d93ac893-984e-43f5-a0ca-de8ced43778f" />
+			<set-payload value="#[%dw 2.0 import * from dw::Runtime --- 0 fail('this is not valid')]" doc:name="bad dataweave" doc:id="d93ac893-984e-43f5-a0ca-de8ced43778f" />
 		</untilsuccessfulfailfast:repeat-until-successful-ff>
 	</flow>
 
