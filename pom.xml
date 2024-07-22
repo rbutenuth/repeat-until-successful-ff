@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.codecentric.mule.modules</groupId>
 	<artifactId>repeat-until-successful-ff</artifactId>
-	<version>1.2.1</version>
+	<version>1.2.2-SNAPSHOT</version>
 	<packaging>mule-extension</packaging>
 	<name>Repeat-until-successfull-ff-module Extension</name>
 
@@ -53,7 +53,7 @@
 
 	<scm>
 		<connection>scm:git:git@github.com:rbutenuth/repeat-until-successful-ff.git</connection>
-		<tag>repeat-until-successful-ff-1.2.1</tag>
+		<tag>repeat-until-successful-ff-1.0.0</tag>
 	</scm>
 
 	<distributionManagement>
