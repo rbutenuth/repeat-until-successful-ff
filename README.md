@@ -52,7 +52,7 @@ Add the following dependency to your pom.xml:
 
 ## Release notes
 
-* 1.2.0 2024-07-22: Updated Mule Java SDK to 1.6.3, now ready for Mule running on Java 17.
+* 1.2.1 2024-07-22: Updated Mule Java SDK to 1.6.3, now ready for Mule running on Java 17.
 * 1.1.1 2023-04-25: Dependency updates
 * 1.1.0 2022-05-11: Failure modes
 * 1.0.0 2021-11-30: Initial release.

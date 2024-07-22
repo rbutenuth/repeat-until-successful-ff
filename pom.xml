@@ -31,6 +31,8 @@
 		<maven-site-plugin-version>3.12.1</maven-site-plugin-version>
 		<maven-project-info-reports-plugin-version>3.6.2</maven-project-info-reports-plugin-version>
 		<nexus-staging-maven-plugin-version>1.7.0</nexus-staging-maven-plugin-version>
+		<commons-lang3-version>3.15.0</commons-lang3-version>
+		<mule-java-module-version>1.2.13</mule-java-module-version>
 	</properties>
 
 	<developers>
@@ -209,6 +211,7 @@
 			<artifactId>mule-java-module</artifactId>
 			<version>1.2.13</version>
 			<classifier>mule-plugin</classifier>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
