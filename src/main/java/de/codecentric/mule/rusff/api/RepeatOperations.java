@@ -29,6 +29,7 @@ import org.mule.runtime.extension.api.exception.ModuleException;
 import org.mule.runtime.extension.api.runtime.parameter.Literal;
 import org.mule.runtime.extension.api.runtime.process.CompletionCallback;
 import org.mule.runtime.extension.api.runtime.route.Chain;
+import org.mule.sdk.api.annotation.param.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,8 +53,10 @@ public class RepeatOperations implements Stoppable, Startable {
 
 	@Override
 	public void start() {
-		SchedulerConfig config = SchedulerConfig.config().withMaxConcurrentTasks(10)
-				.withShutdownTimeout(1, TimeUnit.SECONDS).withPrefix("repeat-until-successful-ff")
+		SchedulerConfig config = SchedulerConfig.config()
+				.withMaxConcurrentTasks(10) // TODO: Are 10 necessary?
+				.withShutdownTimeout(1, TimeUnit.SECONDS)
+				.withPrefix("repeat-until-successful-ff")
 				.withName("operations");
 		scheduledExecutor = schedulerService.customScheduler(config);
 	}
@@ -65,6 +68,7 @@ public class RepeatOperations implements Stoppable, Startable {
 
 	@Alias("repeat-until-successful-ff")
 	@Throws(NumberErrorType.class)
+	@MediaType("*/*")
 	public void repeat(Chain operations, CompletionCallback<Object, Object> callback, //
 			@Summary("How often shall the operation be retried when the first try failed?") int numberOfRetries,
 			@Summary("Time between initial call and first retry, in milliseconds") int initialDelay,
