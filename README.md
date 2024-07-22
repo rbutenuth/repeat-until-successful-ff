@@ -45,7 +45,16 @@ Add the following dependency to your pom.xml:
 <dependency>
 	<groupId>de.codecentric.mule.modules</groupId>
 	<artifactId>repeat-until-successful-ff</artifactId>
-	<version>1.1.1</version>
+	<version>1.2.0</version>
 	<classifier>mule-plugin</classifier>
 </dependency>
 ```
+
+## Release notes
+
+* 1.2.0 2024-07-22: Updated Mule Java SDK to 1.6.3, now ready for Mule running on Java 17.
+* 1.1.1 2023-04-25: Dependency updates
+* 1.1.0 2022-05-11: Failure modes
+* 1.0.0 2021-11-30: Initial release.
+
+ 
